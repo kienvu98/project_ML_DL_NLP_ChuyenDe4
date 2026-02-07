@@ -1,0 +1,44 @@
+
+services:
+  dl:
+    image: dl-project:latest
+    build:
+      context: ..
+      dockerfile: docker/dl/Dockerfile
+
+    container_name: dl-container
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+     # ===== Ports (JupyterLab) =====
+    ports:
+      - "8888:8888"
+
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+
+    volumes:
+      - ../src:/workspace/src
+      - ../notebooks:/workspace/notebooks
+
+      # data
+      - ../data:/data
+
+       # Artifacts
+      - ../checkpoints:/checkpoints
+      - ../logs:/logs
+
+    # ===== HuggingFace cache (rất nên) =====
+      - ~/.cache/huggingface:/root/.cache/huggingface
+
+    working_dir: /workspace
+    env_file:
+      - ../.env
+    tty: true
+    stdin_open: true

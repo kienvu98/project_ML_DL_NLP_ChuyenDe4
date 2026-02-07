@@ -1,0 +1,29 @@
+# Core DL
+torch
+torchvision
+torchaudio
+
+# Data processing
+numpy
+pandas
+scikit-learn
+tqdm
+matplotlib
+seaborn
+wordcloud
+tiktoken
+
+# Logging & experiment tracking
+tensorboard
+wandb
+
+# Notebook
+jupyterlab
+
+# Hugging Face ecosystem
+transformers
+datasets
+tokenizers
+accelerate
+huggingface_hub
+sentencepiece
