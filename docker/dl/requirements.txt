@@ -27,3 +27,4 @@ tokenizers
 accelerate
 huggingface_hub
 sentencepiece
+underthesea
