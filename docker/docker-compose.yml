@@ -42,3 +42,55 @@ services:
       - ../.env
     tty: true
     stdin_open: true
+
+    # Chỉ start khi Ollama HEALTHY
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+    networks:
+      - ai-net
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-container
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+
+    ports:
+      - "11434:11434"
+
+    volumes:
+      - ollama-data:/root/.ollama
+      - ../models:/shared/models
+
+    # HEALTHCHECK ĐÚNG CHO OLLAMA
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+    restart: unless-stopped
+    networks:
+      - ai-net
+
+
+networks:
+  ai-net:
+    driver: bridge
+
+volumes:
+  ollama-data:
