@@ -28,3 +28,4 @@ accelerate
 huggingface_hub
 sentencepiece
 underthesea
+sentence-transformers
